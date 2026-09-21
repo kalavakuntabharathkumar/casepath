@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS cases (
+  id SERIAL PRIMARY KEY,
+  case_number VARCHAR(50) UNIQUE NOT NULL,
+  patient_label VARCHAR(120) NOT NULL,
+  status VARCHAR(30) NOT NULL DEFAULT 'Pending',
+  classification VARCHAR(80),
+  confidence NUMERIC(5,4),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id SERIAL PRIMARY KEY,
+  action VARCHAR(80) NOT NULL,
+  actor VARCHAR(120) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
