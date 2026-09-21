@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pathcase
+      POSTGRES_USER: pathcase
+      POSTGRES_PASSWORD: pathcase
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: ./server
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://pathcase:pathcase@db:5432/pathcase
+      JWT_SECRET: change-me-in-production
+      CLASSIFIER_URL: http://classifier:8001/predict
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+      - classifier
+
+  classifier:
+    build: ./classifier
+    ports:
+      - "8001:8001"
+
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
